@@ -121,18 +121,63 @@ def adicionar_curso():
         except Exception as erro:
             session.rollback()
             print(f"Ocorreu um erro {erro}")
-adicionar_curso()
-
-
-
-                
-
-        
-
-
+#adicionar_curso()
 
 #Listar
+def listar_cursos():
+    with Session() as session:
+        try:
+            #Como pegar todos os registros da tabela?
+            todos_cursos = session.query(Curso).all()
+            for curso in todos_cursos:
+                print(f"\n--- Curso {curso.nome}---")
+                for aluno in curso.alunos:
+                    print(aluno.nome)
+
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro {erro}")
+
+#listar_cursos()
+
+def listar_alunos():
+    with Session() as session:
+        try:
+            #Como pegar todos os registros da tabela?
+            todos_alunos = session.query(Aluno).all()
+            for aluno in todos_alunos:
+                nomes_cursos = [curso.nome for curso in aluno.cursos]
+                print(f"Nome: {aluno.nome} - Cursos: {nomes_cursos}")
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro {erro}")
+
+#listar_alunos()
 
 #Atualizar
+
+def atualizar_nome_aluno():
+    with Session() as session:
+        try:
+            nome_atual = input("Digite o nome do aluno que deseja atualizar: ").capitalize()
+            
+            aluno = session.query(Aluno).filter_by(nome=nome_atual).first()
+
+            if aluno is None:
+                print("Aluno não encontrado!")
+                return
+            
+            novo_nome = input("Digite o novo nome: ").capitalize()
+            aluno.nome = novo_nome 
+
+            session.commit()
+            print("Nome atualizado com sucesso!")
+
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro: {erro}")
+
+
+
 
 #Deletar
